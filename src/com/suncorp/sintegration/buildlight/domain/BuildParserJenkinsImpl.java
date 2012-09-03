@@ -12,7 +12,9 @@ public class BuildParserJenkinsImpl implements BuildParser {
     public BuildStatus checkStatus(String url, String jobName) throws IOException {
         String status = getJobStatus(url, jobName);
         if (status.equals("blue_anime")) return BuildStatus.PROGRESS;
+        else if (status.equals("red_anime")) return BuildStatus.PROGRESS;
         else if (status.equals("red")) return BuildStatus.FAILURE;
+        else if (status.equals("yellow")) return BuildStatus.FAILURE;
         else if (status.equals("blue")) return BuildStatus.SUCCESS;
         return BuildStatus.UNKNOWN;
     }
