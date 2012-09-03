@@ -9,7 +9,6 @@ Build program
 1. Install java (6 or 7) and ant on your machine
 2. Go to the root of the directory and run 'ant all'
 
-
 Run Program
 -----------
 1. Go to <root>/dist
@@ -18,7 +17,6 @@ Run Program
 jenkins.url=jenkins.corsamore.com   # URL to Jenkins server
 jenkins.job.name=2. cashman-intg    # list of jobs to monitor, separated by comma
 light.position=1                    # position of the light to operate on
-
 
 About the Windows driver
 ------------------------
@@ -32,7 +30,6 @@ To check that the USBCMDAP.exe usitlity work fine on your machine do the followi
 
 If the light cannot be found (no output), you need to update the USB HCI Windows driver
 
-
 About  monitoring several job with one light
 --------------------------------------------
 The config value jenkins.job.name let you specify a comma separated list of jobs.
@@ -40,7 +37,6 @@ If one specifies jobs A, B, C, then the logic will be:
 1. If one of the job is running then the light will be BLUE
 2. Else if one of the job has failed than the light will be RED
 3. Else (i.e. all jobs are successful) then the light will be GREEN
-
 
 About using several lights
 --------------------------
