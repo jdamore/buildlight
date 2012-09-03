@@ -33,4 +33,8 @@ public class Configuration {
     public int getLightPosition() {
         return new Integer(properties.getProperty("light.position"));
     }
+
+    public int getUpdateFrequency() {
+        return new Integer(properties.getProperty("update.frequency"));
+    }
 }

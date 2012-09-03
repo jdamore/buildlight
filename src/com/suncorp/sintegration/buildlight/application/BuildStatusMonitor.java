@@ -7,19 +7,22 @@ import java.io.PrintWriter;
 
 public class BuildStatusMonitor {
 
-    public Configuration config;
+    private Configuration config;
     private BuildStatusUpdateJob job;
+    private int updateFrequency;
+
 
     public BuildStatusMonitor(String configName) throws IOException {
         this.config = new Configuration(configName);
         this.job = new BuildStatusUpdateJob(config);
+        this.updateFrequency = config.getUpdateFrequency();
     }
 
     public void start() {
         try {
             while(true) {
                 this.job.update();
-                Thread.sleep(5000);
+                Thread.sleep(this.updateFrequency*1000);
             }
         }
         catch(IOException e) {
