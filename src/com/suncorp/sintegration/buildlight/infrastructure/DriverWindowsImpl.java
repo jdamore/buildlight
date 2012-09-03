@@ -1,11 +1,22 @@
 package com.suncorp.sintegration.buildlight.infrastructure;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 public class DriverWindowsImpl implements Driver {
 
-    public static final String DRIVER = "USBCMDAP.exe";
+    private static final String DRIVER = "USBCMDAP.exe";
+    private static final Driver thisDriver = new DriverWindowsImpl();
+
+    private Map<Integer, String> lightSids = new HashMap<Integer, String>();
+
+    private DriverWindowsImpl() {}
+
+    public static Driver getInstance() {
+        return thisDriver;
+    }
 
     public int setColor(int position, Color color) throws IOException {
         String lightSid = getLightSid(position);
@@ -20,9 +31,23 @@ public class DriverWindowsImpl implements Driver {
     }
 
     private String getLightSid(int position) throws IOException {
-        Runtime runtime = Runtime.getRuntime();
-        Process p = runtime.exec(DRIVER + " E");
-        return readDevicesProcessOutput(p)[position];
+        String lightSid = this.lightSids.get(position);
+        if(lightSid==null) {
+            this.lightSids.put(position, readLightSid(position));
+        }
+        return this.lightSids.get(position);
+    }
+
+    private String readLightSid(int position) throws IOException {
+        try {
+            Runtime runtime = Runtime.getRuntime();
+            Process p = runtime.exec(DRIVER + " E");
+            p.waitFor();
+            return readDevicesProcessOutput(p)[position];
+        }
+        catch(InterruptedException e) {
+            throw new RuntimeException("getLightSid: Problem waiting for runtime process to exit...", e);
+        }
     }
 
     private String[] readDevicesProcessOutput(Process p) throws IOException {
@@ -49,7 +74,7 @@ public class DriverWindowsImpl implements Driver {
             return p.exitValue();
         }
         catch(InterruptedException e) {
-            throw new RuntimeException("Problem waiting for runtime process to exit...", e);
+            throw new RuntimeException("changeStatus: Problem waiting for runtime process to exit...", e);
         }
     }
 
