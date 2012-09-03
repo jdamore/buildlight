@@ -21,10 +21,12 @@ public class BuildStatusUpdateJob {
     public void update() throws IOException {
         String jenkinsUrl = config.getJenkinsUrl();
         Set statuses = new HashSet();
-        for(String jenkinsJobName : config.getJenkinsJobNames()) {
-            System.out.println("Will check job for " + jenkinsJobName);
+        String[] jenkinsJobNames = config.getJenkinsJobNames();
+//        printJenkinsJobNames(jenkinsJobNames);
+        for(String jenkinsJobName : jenkinsJobNames) {
             BuildParser buildParser = new BuildParserJenkinsImpl();
-            BuildStatus buildStatus = buildParser.checkStatus(jenkinsUrl, jenkinsJobName.trim());
+            jenkinsJobName = jenkinsJobName.trim();
+            BuildStatus buildStatus = buildParser.checkStatus(jenkinsUrl, jenkinsJobName);
             System.out.println("Status for job " + jenkinsJobName + " is " + buildStatus);
             statuses.add(buildStatus);
         }
@@ -32,6 +34,16 @@ public class BuildStatusUpdateJob {
         Light light = new Light(new DriverWindowsImpl(), config.getLightPosition());
         System.out.println("Will set status of light at position " + config.getLightPosition() + " to " + overallStatus);
         light.setStatus(overallStatus);
+    }
+
+    private void printJenkinsJobNames(String[] jenkinsJobNames) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for(String jenkinsJobName : jenkinsJobNames) {
+            sb.append(jenkinsJobName + " ");
+        }
+        sb.append("]");
+        System.out.println("Will check job for " + sb.toString());
     }
 
     private static BuildStatus getOverallStatus(Set<BuildStatus> statuses) {

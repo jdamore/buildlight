@@ -1,0 +1,54 @@
+This is a java program that display Jenkins build statuses using Delcom Gen 2 lights.
+GREEN=Success, RED=Failure, BLUE=Building
+This program is designed for Windows and make use of the USBCMDAP.exe Delcom windows driver utility.
+
+Build program
+-------------
+
+1. Install java (6 or 7) and ant on your machine
+2. Go to the root of the directory and run 'ant all'
+
+
+Run Program
+-----------
+
+1. Go to <root>/dist
+2. Add a config file of your choice in <root>/dist/config e.g.
+
+jenkins.url=jenkins.corsamore.com   # URL to Jenkins server
+jenkins.job.name=2. cashman-intg    # list of jobs to monitor, separated by comma
+light.position=1                    # position of the light to operate on
+
+
+About the Windows driver
+------------------------
+Delcom Gen II light work with pre-installed native Windows HCI USB driver.
+To check that the USBCMDAP.exe usitlity work fine on your machine do the following:
+
+1. Plug in a Delcom Gen II USB light
+2. Go to <root>/dist
+3. Run the command ./bin/USBCMDAP.exe E
+4. Make sure the light is found (program should return TID=2 and SID=<something>
+
+If the light cannot be found (no output), you need to update the dUSB HCI Windows driver
+
+
+About  monitoring several job with one light
+--------------------------------------------
+The config value jenkins.job.name let you specify a comma separated list of jobs.
+If one specifies jobs A, B, C, then the logic will be:
+1. If one of the job is running then the light will be BLUE
+2. Else if one of the job has failed than the light will be RED
+3. Else (i.e. all jobs are successful) then the light will be GREEN
+
+About using several lights
+--------------------------
+
+The program works with several light plugged to several USB ports.
+You can therefore monitor several builds (or set of builds) using different lights.
+To do that, use the light.position config values: 1, 2, 3, etc...
+The position references the order in which the Delcom light appears when running 'USBCMDAP.exe E'.
+You will therefore need to find out yourself what physical light 1, 3, or 3 corresponds to.
+
+
+
