@@ -16,6 +16,7 @@ Run Program
    jenkins.url=jenkins.mydomain.com    # URL to Jenkins server
    jenkins.job.name=myapp-build-job    # list of jobs to monitor, separated by comma
    light.position=1                    # position of the light to operate on
+   update.frequency=3                  # the refresh frequency in seconds
 3. Run the command '<root>/dist/buildlight.bat myconfig'
 
 About the Windows driver
