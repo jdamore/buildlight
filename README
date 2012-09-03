@@ -1,17 +1,17 @@
-This is a java program that display Jenkins build statuses using Delcom Gen 2 lights.
+====================================================================================
+Java program that displays Jenkins build statuses using Delcom Gen 2 lights.
 GREEN=Success, RED=Failure, BLUE=Building
 This program is designed for Windows and make use of the USBCMDAP.exe Delcom windows driver utility.
+====================================================================================
 
 Build program
 -------------
-
 1. Install java (6 or 7) and ant on your machine
 2. Go to the root of the directory and run 'ant all'
 
 
 Run Program
 -----------
-
 1. Go to <root>/dist
 2. Add a config file of your choice in <root>/dist/config e.g.
 
@@ -30,7 +30,7 @@ To check that the USBCMDAP.exe usitlity work fine on your machine do the followi
 3. Run the command ./bin/USBCMDAP.exe E
 4. Make sure the light is found (program should return TID=2 and SID=<something>
 
-If the light cannot be found (no output), you need to update the dUSB HCI Windows driver
+If the light cannot be found (no output), you need to update the USB HCI Windows driver
 
 
 About  monitoring several job with one light
@@ -41,9 +41,9 @@ If one specifies jobs A, B, C, then the logic will be:
 2. Else if one of the job has failed than the light will be RED
 3. Else (i.e. all jobs are successful) then the light will be GREEN
 
+
 About using several lights
 --------------------------
-
 The program works with several light plugged to several USB ports.
 You can therefore monitor several builds (or set of builds) using different lights.
 To do that, use the light.position config values: 1, 2, 3, etc...
