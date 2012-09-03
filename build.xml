@@ -1,0 +1,162 @@
+<project name="Build Light Project Build Script" basedir="." default="all">
+
+    <!-- =================================================================== -->
+    <!-- Properties                                                          -->
+    <!-- =================================================================== -->
+    <property file="build.properties"/>
+
+    <!-- =================================================================== -->
+    <!-- Application Classes and Libraries Paths                             -->
+    <!-- =================================================================== -->
+    <path id="buildlight.src.path">
+        <path location="${buildlight.src}"/>
+    </path>
+
+    <path id="buildlight.classes.path">
+        <path location="${buildlight.classes}"/>
+    </path>
+
+    <path id="buildlight.lib.path">
+        <fileset dir="${buildlight.lib}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+
+    <!-- =================================================================== -->
+    <!-- reate required distribution directories                             -->
+    <!-- =================================================================== -->
+    <target name="prepare">
+        <mkdir dir="${buildlight.dist}/lib"/>
+        <mkdir dir="${buildlight.dist}/bin"/>
+        <mkdir dir="${buildlight.dist}/config"/>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Clean Target                                                         -->
+    <!-- =================================================================== -->
+    <target name="clean" description="Clean bytecode">
+        <delete dir="${buildlight.dist}" quiet="true"/>
+        <delete dir="${buildlight.classes}">
+            <include name="./**/*.class" />
+        </delete>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- All Targets                                                        -->
+    <!-- =================================================================== -->
+    <target name="all" description="Default Target">
+        <antcall target="clean" />
+        <antcall target="prepare" />
+        <antcall target="compile" />
+        <antcall target="dist" />
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Build Target                                                         -->
+    <!-- =================================================================== -->
+    <target name="build" description="Main Build Target">
+        <antcall target="clean" />
+        <antcall target="prepare" />
+        <antcall target="compile" />
+        <antcall target="dist" />
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Dist Target                                                         -->
+    <!-- =================================================================== -->
+    <target name="dist" description="Main Build Target">
+        <!--<antcall target="copy-classes" />-->
+        <antcall target="copy-lib" />
+        <antcall target="copy-config" />
+        <antcall target="copy-bin" />
+        <antcall target="package" />
+    </target>
+
+    <!--=================================================================== -->
+    <!--Compile all Java Code                                               -->
+    <!--=================================================================== -->
+    <target name="compile"  depends="prepare">
+        <javac srcdir="${buildlight.src}"
+            destdir="${buildlight.classes}"
+            debug="on"
+            deprecation="on"
+            optimize="on">
+            <classpath refid="buildlight.lib.path"/>
+        </javac>
+        <copy toDir="${buildlight.classes}">
+            <fileset dir="${buildlight.src}">
+                <include name="**/*.properties"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Copy application byecode to distribution                          -->
+    <!-- =================================================================== -->
+    <target name="copy-classes" depends="prepare">
+        <copy toDir="${buildlight.dist}/classes">
+            <fileset dir="${buildlight.classes}">
+                <include name="**/*.class"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Copy application libraries to distribution                          -->
+    <!-- =================================================================== -->
+    <target name="copy-lib" depends="prepare">
+        <copy toDir="${buildlight.dist}/lib" flatten="true">
+            <fileset dir="${buildlight.lib}">
+                <include name="**/*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Copy properties files                                               -->
+    <!-- =================================================================== -->
+    <target name="copy-config" depends="prepare">
+        <copy toDir="${buildlight.dist}/config" flatten="true">
+            <fileset dir="${buildlight.src}">
+                <include name="**/*.properties"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Copy application libraries to distribution                          -->
+    <!-- =================================================================== -->
+    <target name="copy-bin" depends="prepare">
+        <copy toDir="${buildlight.dist}">
+            <fileset dir="${buildlight.bin}">
+                <include name="buildlight.bat"/>
+            </fileset>
+        </copy>
+        <copy toDir="${buildlight.dist}/bin">
+            <fileset dir="${buildlight.bin}">
+                <include name="USBCMDAP.exe"/>
+            </fileset>
+        </copy>
+    </target>
+
+
+
+    <!-- =================================================================== -->
+    <!-- Create JAR file                                                     -->
+    <!-- =================================================================== -->
+    <target name="package" depends="compile">
+         <jar destfile="${buildlight.dist}/buildlight.jar"
+             basedir="${buildlight.classes}"
+             includes="**/*">
+        </jar>
+        <move toDir="${buildlight.dist}/lib" flatten="true">
+            <fileset dir="${buildlight.dist}">
+                <include name="buildlight.jar"/>
+            </fileset>
+        </move>
+
+    </target>
+
+</project>
+
