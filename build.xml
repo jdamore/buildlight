@@ -77,6 +77,7 @@
     <!--Compile all Java Code                                               -->
     <!--=================================================================== -->
     <target name="compile"  depends="prepare">
+        <mkdir dir="${buildlight.classes}" />
         <javac srcdir="${buildlight.src}"
             destdir="${buildlight.classes}"
             debug="on"
